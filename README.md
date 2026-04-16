@@ -2,14 +2,13 @@
   <br>
     <img src="./assets/shoppy-x-ray.svg" alt="logo" width="200">
   <br>
-  Shopify Skeleton Theme
+  PeptiLogists Theme
 </h1>
 
-A minimal, carefully structured Shopify theme designed to help you quickly get started. Designed with modularity, maintainability, and Shopify's best practices in mind.
+A custom Shopify theme for PeptiLogists, based on the Shopify Skeleton Theme and adapted for ongoing storefront development with Shopify CLI, VS Code, and GitHub.
 
 <p align="center">
   <a href="./LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
-  <a href="./actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Shopify/skeleton-theme/actions/workflows/ci.yml/badge.svg"></a>
 </p>
 
 ## Getting started
@@ -29,7 +28,7 @@ If you use VS Code:
 Clone this repository using Git or Shopify CLI:
 
 ```bash
-git clone git@github.com:Shopify/skeleton-theme.git
+git clone https://github.com/peptilogists-stack/peptilogists-theme.git
 # or
 shopify theme init
 ```
@@ -62,9 +61,9 @@ To learn more, refer to the [theme architecture documentation](https://shopify.d
 
 [Templates](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) control what's rendered on each type of page in a theme.
 
-The Skeleton Theme scaffolds [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their store.
+This theme scaffolds [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their store.
 
-None of the template types are required, and not all of them are included in the Skeleton Theme. Refer to the [template types reference](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) for a full list.
+None of the template types are required, and not all of them are included here. Refer to the [template types reference](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) for a full list.
 
 ### Sections
 
@@ -147,14 +146,14 @@ For CSS and JavaScript, we recommend using the [`{% stylesheet %}`](https://shop
 
 ### `critical.css`
 
-The Skeleton Theme explicitly separates essential CSS necessary for every page into a dedicated `critical.css` file.
+This theme explicitly separates essential CSS necessary for every page into a dedicated `critical.css` file.
 
 ## Contributing
 
-We're excited for your contributions to the Skeleton Theme! This repository aims to remain as lean, lightweight, and fundamental as possible, and we kindly ask your contributions to align with this intention.
+Contributions should keep the theme maintainable, lightweight, and aligned with Shopify best practices.
 
 Visit our [CONTRIBUTING.md](./CONTRIBUTING.md) for a detailed overview of our process, guidelines, and recommendations.
 
 ## License
 
-Skeleton Theme is open-sourced under the [MIT](./LICENSE.md) License.
+This project is open-sourced under the [MIT](./LICENSE.md) License.
