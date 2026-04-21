@@ -1,29 +1,47 @@
-name: PR Preview Theme
+name: Shopify Preview
 
 on:
   pull_request:
-    branches: [ main ]
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   preview:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
+      - name: Install Shopify CLI
+        run: npm install -g @shopify/cli @shopify/theme
+
+      - name: Set Preview Theme Name
+        id: vars
+        run: |
+          echo "THEME_NAME=PR-${{ github.event.number }}" >> $GITHUB_ENV
+
+      # 🔥 CREATE / UPDATE PREVIEW THEME
       - name: Deploy Preview Theme
-        id: deploy
-        uses: shopify/cli-action@v2
-        with:
-          command: >
-            theme push
-            --unpublished
-            --json
+        if: github.event.action != 'closed'
+        run: |
+          shopify theme push \
+            --store $SHOPIFY_STORE \
+            --password $SHOPIFY_PASSWORD \
+            --unpublished \
+            --theme-name "$THEME_NAME"
         env:
           SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
           SHOPIFY_PASSWORD: ${{ secrets.SHOPIFY_PASSWORD }}
 
-      - name: Extract Preview URL
+      # 🧹 DELETE PREVIEW THEME ON CLOSE
+      - name: Delete Preview Theme
+        if: github.event.action == 'closed'
         run: |
-          echo "Preview created"
+          THEME_ID=$(shopify theme list --store $SHOPIFY_STORE --password $SHOPIFY_PASSWORD | grep "$THEME_NAME" | awk '{print $1}')
+          if [ -n "$THEME_ID" ]; then
+            shopify theme delete $THEME_ID --force \
+              --store $SHOPIFY_STORE \
+              --password $SHOPIFY_PASSWORD
+          fi
+        env:
+          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+          SHOPIFY_PASSWORD: ${{ secrets.SHOPIFY_PASSWORD }}
