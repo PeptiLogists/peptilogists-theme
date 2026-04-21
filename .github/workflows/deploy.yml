@@ -1,34 +1,54 @@
-name: Shopify Deploy
+name: Shopify CI/CD
 
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: shopify-deploy
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+
+  # 🧪 STEP 1 — Theme Check (blocks bad code)
+  theme-check:
+    name: Theme Check
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Deploy to DEV theme
-        if: github.ref == 'refs/heads/dev'
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1
+
+      - name: Install Theme Check
+        run: gem install theme-check
+
+      - name: Run Theme Check
+        run: theme-check
+
+  # 🚀 STEP 2 — Deploy (only if checks pass)
+  deploy:
+    name: Deploy Theme
+    runs-on: ubuntu-latest
+    needs: theme-check
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Shopify
         uses: shopify/cli-action@v2
         with:
-          command: theme push
+          command: >
+            theme push
+            --allow-live
+            --theme-id ${{ github.ref == 'refs/heads/main' && secrets.SHOPIFY_THEME_ID || secrets.SHOPIFY_THEME_ID_DEV }}
         env:
           SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
           SHOPIFY_PASSWORD: ${{ secrets.SHOPIFY_PASSWORD }}
-          SHOPIFY_THEME_ID: ${{ secrets.SHOPIFY_THEME_ID_DEV }}
-
-      - name: Deploy to LIVE theme
-        if: github.ref == 'refs/heads/main'
-        uses: shopify/cli-action@v2
-        with:
-          command: theme push --allow-live
-        env:
-          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
-          SHOPIFY_PASSWORD: ${{ secrets.SHOPIFY_PASSWORD }}
-          SHOPIFY_THEME_ID: ${{ secrets.SHOPIFY_THEME_ID }}
