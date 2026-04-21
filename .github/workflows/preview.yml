@@ -1,0 +1,29 @@
+name: PR Preview Theme
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy Preview Theme
+        id: deploy
+        uses: shopify/cli-action@v2
+        with:
+          command: >
+            theme push
+            --unpublished
+            --json
+        env:
+          SHOPIFY_STORE: ${{ secrets.SHOPIFY_STORE }}
+          SHOPIFY_PASSWORD: ${{ secrets.SHOPIFY_PASSWORD }}
+
+      - name: Extract Preview URL
+        run: |
+          echo "Preview created"
