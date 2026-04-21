@@ -1,0 +1,25 @@
+name: AI PR Review (Shopify)
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run AI Review
+        run: |
+          echo "Running AI review..."
+
+          # Example failure condition (replace later with real AI logic)
+          if grep -r "console.log" .; then
+            echo "❌ Found console.log in code"
+            exit 1
+          fi
+
+          echo "✅ AI review passed"
